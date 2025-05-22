@@ -6,7 +6,7 @@ from dataFunctions import *
 #     return ""
 
 
-def get_response(question):
+def get_response(question, llm):
     role = (
         "You are an expert Dungeons & Dragons Game Master AI running an interactive and imaginative game. For each situation, think "
         "through multiple possible narrative paths, mechanical outcomes, or player choices, one step at a time. After each round of "
@@ -23,9 +23,11 @@ def get_response(question):
 
 
     embedder, index, metadata = prepare_embeddings()
-    print(retrieve_context(question, embedder, index, metadata))
-    prompt = role + retrieve_context(question, embedder, index, metadata)
-    output = llm(question, max_tokens = 2048)
+    #print(retrieve_context(question, embedder, index, metadata))
+    context = retrieve_context(question, embedder, index, metadata)
+    prompt = role + "\n" + build_prompt([context], question)
+
+    output = llm(prompt, max_tokens = 2048)
     print("Reason for finish: " + output['choices'][0].get('finish_reason'))
     return output['choices'][0]['text']
 
@@ -34,9 +36,16 @@ if __name__ == '__main__':
     llm = Llama(
         model_path = "C:\\Users\\Ana\\.lmstudio\\models\\NousResearch\\Hermes-3-Llama-3.2-3B-GGUF\\Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
         n_ctx = 8192,
-        verbose = False)
-    while True:
-        q = input("Query:")
-        print("Thinking")
-        with open("Response.txt", "w", encoding = "utf-8") as f:
-            f.write(get_response(q))
+        verbose = False,
+        stop=["User:", "Player:", "\n\n"]
+
+    )
+    #while True:
+    #q = input("Query:")
+    q="I am a level 3 Mage. What spell should I get?"
+    print("Thinking")
+    with open("Response.txt", "w", encoding = "utf-8") as f:
+        f.write(get_response(q, llm))
+
+
+
