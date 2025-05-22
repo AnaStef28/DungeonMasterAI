@@ -22,13 +22,14 @@ def get_response(question):
         "Select the best narrative path. Continue the story based on that decision. Return to Step 1 with the updated situation.")
     prompt = role + get_context_db(question) + question
     output = llm(question, max_tokens = 2048)
-    print(output['choices'][0].get('finish_reason'))
+    print("Reason for finish: " + output['choices'][0].get('finish_reason'))
     return output['choices'][0]['text']
 
 
 if __name__ == '__main__':
     llm = Llama(
         model_path = "C:\\Users\ATPEngie\.lmstudio\models\\NousResearch\Hermes-3-Llama-3.2-3B-GGUF\Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
+        n_ctx = 8192,
         verbose = False)
     while True:
         q = input("Query:")
