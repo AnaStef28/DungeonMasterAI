@@ -1,9 +1,9 @@
 from llama_cpp import Llama
-
+from dataFunctions import *
 
 # WIP
-def get_context_db(question):
-    return ""
+# def get_context_db(question):
+#     return ""
 
 
 def get_response(question):
@@ -20,7 +20,11 @@ def get_response(question):
         "Briefly evaluate each thought. Remove any that are illogical, uninteresting, or redundant. Keep the strongest one or two."
         "Step 4: Choose and Continue"
         "Select the best narrative path. Continue the story based on that decision. Return to Step 1 with the updated situation.")
-    prompt = role + get_context_db(question) + question
+
+
+    embedder, index, metadata = prepare_embeddings()
+    print(retrieve_context(question, embedder, index, metadata))
+    prompt = role + retrieve_context(question, embedder, index, metadata)
     output = llm(question, max_tokens = 2048)
     print("Reason for finish: " + output['choices'][0].get('finish_reason'))
     return output['choices'][0]['text']
@@ -28,7 +32,7 @@ def get_response(question):
 
 if __name__ == '__main__':
     llm = Llama(
-        model_path = "C:\\Users\ATPEngie\.lmstudio\models\\NousResearch\Hermes-3-Llama-3.2-3B-GGUF\Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
+        model_path = "C:\\Users\\Ana\\.lmstudio\\models\\NousResearch\\Hermes-3-Llama-3.2-3B-GGUF\\Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
         n_ctx = 8192,
         verbose = False)
     while True:
