@@ -18,23 +18,24 @@ def write(string):
     return True
 
 def start_chat(llm):
-    user_prompt=input('Query:')
     query= {
-              "role": "user",
-              "content": input("Query:")
-          }
+        "role": "user",
+        "content": get_context_prompt(input("Query:"))
+    }
     title=llm("Write a title based on this question: "+ query['content'])+".json"
-    with open('Initial.json', 'r') as file:
-        initial = json.load(file)
+    with (open('Initial_Prompt.txt', 'r') as file):
+        initial = {
+            "role": "system",
+            "content":file.read()
+        }
     chat_history=[initial, query]
     
     response=llm.create_chat_completion(messages = chat_history)
-    while not write(response):
-        response = llm.create_chat_completion(messages = chat_history)
-    chat_history.append(response)
-    
-    with open(title,'w') as f:
-        json.dump(chat_history,f, encoding='utf-8', ensure_ascii=False)
+    write(response['choices'][0]['message']['content'])
+    chat_history.append(response['choices'][0]['message'])
+
+    with open(title, 'w', encoding = 'utf-8') as f:
+        json.dump(chat_history, f, ensure_ascii = False, indent = 2)
     
     continue_chat(llm,title,chat_history)
 
@@ -44,17 +45,16 @@ def continue_chat(llm, chat_file,chat_history=None):
             chat_history = json.load(file)
     query="b"
     while len(query) > 0:
-        query=input("Query:")
         user_query = {
             "role": "user",
             "content": get_context_prompt(input("Query:"))
         }
         chat_history.append(user_query)
         response = llm.create_chat_completion(messages = chat_history)
-        print(response['content'])
-        chat_history.append(response)
-        with open(chat_file, 'a') as file:
-            json.dump(chat_history, file, encoding='utf-8', ensure_ascii=False)
+        write(response['choices'][0]['message']['content'])
+        chat_history.append(response['choices'][0]['message'])
+        with open(chat_file, 'w', encoding = 'utf-8') as file:
+            json.dump(chat_history, file, ensure_ascii = False, indent = 2)
 
 if __name__ == '__main__':
     llm = Llama(
