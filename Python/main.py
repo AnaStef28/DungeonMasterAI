@@ -26,7 +26,7 @@ def start_chat(llm):
     title=llm("Write a title based on this question: "+ query['content'])+".json"
     with open('Initial.json', 'r') as file:
         initial = json.load(file)
-    chat_history=[initial,query]
+    chat_history=[initial, query]
     
     response=llm.create_chat_completion(messages = chat_history)
     while not write(response):
