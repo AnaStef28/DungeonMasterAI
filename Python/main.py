@@ -1,51 +1,67 @@
+import json
 from llama_cpp import Llama
 from dataFunctions import *
 
-# WIP
-# def get_context_db(question):
-#     return ""
 
-
-def get_response(question, llm):
-    role = (
-        "You are an expert Dungeons & Dragons Game Master AI running an interactive and imaginative game. For each situation, think "
-        "through multiple possible narrative paths, mechanical outcomes, or player choices, one step at a time. After each round of "
-        "thoughts, choose the most compelling or logical continuation — but if you realize a path is weak, drop it."
-        "At each decision point, follow this structure:\n"
-        "Step 1: Situation Analysis"
-        "Describe the current scene. Identify key characters, locations, stakes, and any relevant game mechanics or unresolved questions."
-        "Step 2: Generate 3 Thought Paths"
-        "Write 3 distinct \"thoughts\" — each one a potential development, outcome, or narrative direction based on the current situation. These can vary in tone (e.g., dramatic, comedic, dangerous) or in player consequence (e.g., skill checks, combat, roleplay)."
-        "Step 3: Evaluate and Prune"
-        "Briefly evaluate each thought. Remove any that are illogical, uninteresting, or redundant. Keep the strongest one or two."
-        "Step 4: Choose and Continue"
-        "Select the best narrative path. Continue the story based on that decision. Return to Step 1 with the updated situation.")
-
-
+def get_context_prompt(question):
+    '''
+    Get a prompt + context.
+    Returns the full string.
+    '''
     embedder, index, metadata = prepare_embeddings()
-    #print(retrieve_context(question, embedder, index, metadata))
     context = retrieve_context(question, embedder, index, metadata)
-    prompt = role + "\n" + build_prompt([context], question)
+    return build_prompt([context],question)
 
-    output = llm(prompt, max_tokens = 2048)
-    print("Reason for finish: " + output['choices'][0].get('finish_reason'))
-    return output['choices'][0]['text']
 
+def write(string):
+    print(string)
+    return True
+
+def start_chat(llm):
+    query= {
+        "role": "user",
+        "content": get_context_prompt(input("Query:"))
+    }
+    title=llm("Write a title based on this question: "+ query['content'])+".json"
+    with (open('Initial_Prompt.txt', 'r') as file):
+        initial = {
+            "role": "system",
+            "content":file.read()
+        }
+    chat_history=[initial, query]
+    
+    response=llm.create_chat_completion(messages = chat_history)
+    write(response['choices'][0]['message']['content'])
+    chat_history.append(response['choices'][0]['message'])
+
+    with open(title, 'w', encoding = 'utf-8') as f:
+        json.dump(chat_history, f, ensure_ascii = False, indent = 2)
+    
+    continue_chat(llm,title,chat_history)
+
+def continue_chat(llm, chat_file,chat_history=None):
+    if chat_history is None:
+        with open(chat_file, 'r') as file:
+            chat_history = json.load(file)
+    query="b"
+    while len(query) > 0:
+        user_query = {
+            "role": "user",
+            "content": get_context_prompt(input("Query:"))
+        }
+        chat_history.append(user_query)
+        response = llm.create_chat_completion(messages = chat_history)
+        write(response['choices'][0]['message']['content'])
+        chat_history.append(response['choices'][0]['message'])
+        with open(chat_file, 'w', encoding = 'utf-8') as file:
+            json.dump(chat_history, file, ensure_ascii = False, indent = 2)
 
 if __name__ == '__main__':
     llm = Llama(
-        model_path = "C:\\Users\\Ana\\.lmstudio\\models\\NousResearch\\Hermes-3-Llama-3.2-3B-GGUF\\Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
-        n_ctx = 8192,
-        verbose = False,
-        stop=["User:", "Player:", "\n\n"]
-
+        model_path = "../Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
+        n_ctx = 8192
     )
-    #while True:
-    #q = input("Query:")
-    q="I am a level 3 Mage. What spell should I get?"
-    print("Thinking")
-    with open("Response.txt", "w", encoding = "utf-8") as f:
-        f.write(get_response(q, llm))
+    start_chat(llm)
 
 
 
