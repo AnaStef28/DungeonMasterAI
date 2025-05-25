@@ -1,5 +1,4 @@
-import json
-from llama_cpp import Llama
+from Python.guardrail import guardrail
 from dataFunctions import *
 
 
@@ -13,34 +12,22 @@ def get_context_prompt(question):
     return build_prompt([context],question)
 
 
-def write(string):
-    print(string)
-    return True
-
-def start_chat(llm):
-    query= {
-        "role": "user",
-        "content": get_context_prompt(input("Query:"))
-    }
-    title=llm("Write a title based on this question: "+ query['content'])+".json"
-    with (open('Initial_Prompt.txt', 'r') as file):
-        initial = {
-            "role": "system",
-            "content":file.read()
+def continue_chat(chat_file=None):
+    if chat_file is None:
+        #this is a new chat
+        user_query = {
+            "role": "user",
+            "content": get_context_prompt(input("Query:"))
         }
-    chat_history=[initial, query]
-    
-    response=llm.create_chat_completion(messages = chat_history)
-    write(response['choices'][0]['message']['content'])
-    chat_history.append(response['choices'][0]['message'])
-
-    with open(title, 'w', encoding = 'utf-8') as f:
-        json.dump(chat_history, f, ensure_ascii = False, indent = 2)
-    
-    continue_chat(llm,title,chat_history)
-
-def continue_chat(llm, chat_file,chat_history=None):
-    if chat_history is None:
+        title = llm("Write a title based on this question: " + user_query['content']) + ".json"
+        with (open('Initial_Prompt.txt', 'r') as file):
+            initial = {
+                "role": "system",
+                "content": file.read()
+            }
+        chat_history = [initial, user_query]
+        chat_file=title
+    else:
         with open(chat_file, 'r') as file:
             chat_history = json.load(file)
     query="b"
@@ -51,17 +38,21 @@ def continue_chat(llm, chat_file,chat_history=None):
         }
         chat_history.append(user_query)
         response = llm.create_chat_completion(messages = chat_history)
-        write(response['choices'][0]['message']['content'])
+        response = guard.run_through_guardrail(response['choices'][0]['message']['content'], llm)
         chat_history.append(response['choices'][0]['message'])
         with open(chat_file, 'w', encoding = 'utf-8') as file:
             json.dump(chat_history, file, ensure_ascii = False, indent = 2)
 
+
 if __name__ == '__main__':
     llm = Llama(
         model_path = "../Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
-        n_ctx = 8192
+        n_ctx = 8192,
+        verbose = False
     )
-    start_chat(llm)
+    guard=guardrail("Constitution.txt")
+
+    continue_chat()
 
 
 
