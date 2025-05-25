@@ -52,7 +52,6 @@ def build_prompt(context, question):
     context_text = "\n".join(context)
     return f"Context:\n{context_text}\n\nQuestion: {question}\nAnswer:"
 
-
 def retrieve_context(query, embedder, index, metadata, top_k=3):
     query_vec = embedder.encode([query], convert_to_tensor=False)
     distances, indices = index.search(np.array(query_vec), top_k)
