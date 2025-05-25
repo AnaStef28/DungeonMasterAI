@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import faiss
-from llama_cpp import Llama
 
 
 def split_into_chunks(text, max_words=100, overlap=20):
@@ -67,7 +66,7 @@ def prepare_embeddings():
     print("Loading embedding model...")
     embedder = SentenceTransformer('paraphrase-MiniLM-L3-v2')
 
-    folder_path = 'D:\\Facultate\\Python\\FML\\Project\\Funny_FML\\Data'
+    folder_path = 'Data'
     print(f"Loading and embedding data from: {folder_path}")
     passages = load_texts_from_folder(folder_path)
     embeddings = embedder.encode(passages)
