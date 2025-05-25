@@ -1,4 +1,6 @@
-from Python.guardrail import guardrail
+from guardrail import guardrail
+from llama_cpp import Llama
+
 from dataFunctions import *
 
 
@@ -19,7 +21,7 @@ def continue_chat(chat_file=None):
             "role": "user",
             "content": get_context_prompt(input("Query:"))
         }
-        title = llm("Write a title based on this question: " + user_query['content']) + ".json"
+        title = llm("Write a title based on this question: " + user_query['content'])['choices'][0]['text'] + ".json"
         with (open('Chats/Prompts/Initial_Prompt.txt', 'r') as file):
             initial = {
                 "role": "system",
@@ -32,25 +34,27 @@ def continue_chat(chat_file=None):
             chat_history = json.load(file)
     query="b"
     while len(query) > 0:
+        response = llm.create_chat_completion(messages = chat_history)
+        r=response['choices'][0]['message']['content']
+        new_response = guard.run_through_guardrail(r, llm)
+        print(new_response)
+        print(new_response['choices'][0]['message']['content'])
+        chat_history.append(new_response['choices'][0]['message'])
+        with open(chat_file, 'w', encoding = 'utf-8') as file:
+            json.dump(chat_history, file, ensure_ascii = False, indent = 2)
         user_query = {
             "role": "user",
             "content": get_context_prompt(input("Query:"))
         }
         chat_history.append(user_query)
-        response = llm.create_chat_completion(messages = chat_history)
-        response = guard.run_through_guardrail(response['choices'][0]['message']['content'], llm)
-        chat_history.append(response['choices'][0]['message'])
-        with open(chat_file, 'w', encoding = 'utf-8') as file:
-            json.dump(chat_history, file, ensure_ascii = False, indent = 2)
+        #I am a mage, my friend is a rogue. How does out adventure start?
 
 
 if __name__ == '__main__':
     llm = Llama(
-        model_path = "../Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
-        n_ctx = 8192,
-        verbose = False
         model_path = "C:\\Users\\Ana\\.lmstudio\\models\\NousResearch\\Hermes-3-Llama-3.2-3B-GGUF\\Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
-        n_ctx = 8192
+        n_ctx = 8192,
+        verbose=False
     )
     guard=guardrail("Chats/Prompts/Constitution.txt")
 
