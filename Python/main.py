@@ -20,7 +20,7 @@ def continue_chat(chat_file=None):
             "content": get_context_prompt(input("Query:"))
         }
         title = llm("Write a title based on this question: " + user_query['content']) + ".json"
-        with (open('Initial_Prompt.txt', 'r') as file):
+        with (open('Chats/Prompts/Initial_Prompt.txt', 'r') as file):
             initial = {
                 "role": "system",
                 "content": file.read()
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         n_ctx = 8192,
         verbose = False
     )
-    guard=guardrail("Constitution.txt")
+    guard=guardrail("Chats/Prompts/Constitution.txt")
 
     continue_chat()
 
