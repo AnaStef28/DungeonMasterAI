@@ -172,4 +172,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+<<<<<<< HEAD
 *.gguf
+=======
+>>>>>>> parent of e69431c (Added model.)
