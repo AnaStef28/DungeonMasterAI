@@ -22,7 +22,10 @@ def start_chat(llm):
         "role": "user",
         "content": get_context_prompt(input("Query:"))
     }
-    title=llm("Write a title based on this question: "+ query['content'])+".json"
+    # print(llm("Write a title based on this question: "+ query['content'])['choices'][0])
+    # print("-------------------")
+
+    title=llm("Write a title based on this question: "+ query['content'])['choices'][0]['text']+".json"
     with (open('Initial_Prompt.txt', 'r') as file):
         initial = {
             "role": "system",
@@ -58,7 +61,7 @@ def continue_chat(llm, chat_file,chat_history=None):
 
 if __name__ == '__main__':
     llm = Llama(
-        model_path = "../Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
+        model_path = "C:\\Users\\Ana\\.lmstudio\\models\\NousResearch\\Hermes-3-Llama-3.2-3B-GGUF\\Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
         n_ctx = 8192
     )
     start_chat(llm)
