@@ -35,11 +35,12 @@ def continue_chat(chat_file=None):
     query="b"
     while len(query) > 0:
         response = llm.create_chat_completion(messages = chat_history)
-        r=response['choices'][0]['message']['content']
-        new_response = guard.run_through_guardrail(r, llm)
+        new_response = guard.run_through_guardrail(response['choices'][0]['message']['content'], llm)['choices'][0]['text']
         print(new_response)
-        print(new_response['choices'][0]['message']['content'])
-        chat_history.append(new_response['choices'][0]['message'])
+        chat_history.append({
+                "role": "assistant",
+                "content": new_response
+            })
         with open(chat_file, 'w', encoding = 'utf-8') as file:
             json.dump(chat_history, file, ensure_ascii = False, indent = 2)
         user_query = {
