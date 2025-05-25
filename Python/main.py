@@ -35,7 +35,7 @@ def continue_chat(chat_file=None):
     query="b"
     while len(query) > 0:
         response = llm.create_chat_completion(messages = chat_history)
-        new_response = guard.run_through_guardrail(response['choices'][0]['message']['content'], llm)['choices'][0]['text']
+        new_response = guard.run_through_guardrail(response['choices'][0]['message']['content'], llm)
         print(new_response)
         chat_history.append({
                 "role": "assistant",

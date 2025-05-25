@@ -6,7 +6,7 @@ class guardrail:
     def run_through_guardrail(self, response, guard_llm):
         '''
         Given a response and a guard llm, adjust the response so it fits with the constitution.
-        Returns the new response.
+        Returns the new response in string format.
         '''
-        new_response=guard_llm(self.constitution+"\n"+response)
-        return new_response
+        new_response=guard_llm(self.constitution+"\n"+response)['choices'][0]['text']
+        return response
