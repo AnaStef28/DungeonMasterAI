@@ -17,9 +17,13 @@ def generate_title(prompt):
     title_prompt = (
         "You are an assistant that generates a short, descriptive title for a user question. "
         "Return a concise title **in 3 to 8 words maximum**, summarizing the core topic or problem. "
-        "Avoid vague or generic phrases. Output the title as a single line with no punctuation at the end.\n\n"
-        f"User message: {prompt}\n\n"
-        "Title:"
+        "Avoid vague or generic phrases. Output the title as a single line with no punctuation at the end."
+        "\n---\nUser message: I am a knight. I enter a village. What do I see?\n"
+        "Title: Knight arrives at village"
+        "\n---\n"
+        "User message: How do I fix a broken sword?"
+        "Title: Repairing a broken sword"
+        f"\n{prompt}"
     )
 
     response = llm(title_prompt)['choices'][0]['text']
@@ -42,8 +46,6 @@ def continue_chat(chat_file=None):
             "role": "user",
             "content": get_context_prompt(input("Query:"))
         }
-
-
         with (open('Chats/Prompts/Initial_Prompt.txt', 'r') as file):
             initial = {
                 "role": "system",
@@ -64,7 +66,6 @@ def continue_chat(chat_file=None):
                 "content": new_response
             })
         with open(chat_file, 'w', encoding = 'utf-8') as file:
-            print(f"Saving to {file}")
             json.dump(chat_history, file, ensure_ascii = False, indent = 2)
         user_query = {
             "role": "user",
