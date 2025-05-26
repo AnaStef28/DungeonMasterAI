@@ -1,6 +1,6 @@
 from guardrail import guardrail
 from llama_cpp import Llama
-from pathlib import Path
+
 from dataFunctions import *
 
 
@@ -15,13 +15,17 @@ def get_context_prompt(question):
 
 
 def continue_chat(chat_file=None):
+    '''
+    Continue an existing chat from a file, or start a new chat if chat_file is None. If so, will create a new
+    chat file and give it an appropriate title.
+    '''
     if chat_file is None:
         #this is a new chat
         user_query = {
             "role": "user",
             "content": get_context_prompt(input("Query:"))
         }
-        title = llm("Write a title based on this question: " + user_query['content'])['choices'][0]['text'] + ".json"
+        title = llm("Chats/Write a short title based on this question: " + user_query['content']+". Don't exceed ten words.")['choices'][0]['text'] + ".json"
         with (open('Chats/Prompts/Initial_Prompt.txt', 'r') as file):
             initial = {
                 "role": "system",
@@ -36,7 +40,7 @@ def continue_chat(chat_file=None):
     while len(query) > 0:
         response = llm.create_chat_completion(messages = chat_history)
         new_response = guard.run_through_guardrail(response['choices'][0]['message']['content'], llm)
-        print(new_response)
+        #print(new_response)
         chat_history.append({
                 "role": "assistant",
                 "content": new_response
@@ -52,23 +56,24 @@ def continue_chat(chat_file=None):
 
 
 if __name__ == '__main__':
-    # Base path relative to this script's location
-    base_path = Path(__file__).resolve().parent
-
-    # Path to model file (relative to script)
-    model_path = base_path.parent / 'Hermes-3-Llama-3.2-3B.Q4_K_M.gguf'
-
-    prompt_path = base_path / 'Chats' / 'Prompts' / 'Constitution.txt'
-
     llm = Llama(
-        model_path=str(model_path),
-        n_ctx=8192,
+        model_path = "../Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
+        n_ctx = 8192,
         verbose=False
     )
-
-    guard = guardrail(str(prompt_path))
-
-    continue_chat()
-
-
+    guard=guardrail("Chats/Prompts/Constitution.txt")
+    option="1"
+    while len(option) > 0:
+        try:
+            option=input("Option:")
+            if option == "1":
+                #start new chat
+                continue_chat()
+            elif option == "2":
+                #continue existing chat
+                file_name=input("File Name:")
+                continue_chat("Chats/"+file_name)
+        except Exception as e:
+            #print(f"An exception occured: {e}")
+            raise e
 

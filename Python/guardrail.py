@@ -9,4 +9,8 @@ class guardrail:
         Returns the new response in string format.
         '''
         new_response=guard_llm(self.constitution+"\n"+response)['choices'][0]['text']
-        return response
+        if new_response!=response:
+            print("Guardrail changed response.")
+            print(f"Old response: {response}")
+            print(f"New response: {new_response}")
+        return new_response
