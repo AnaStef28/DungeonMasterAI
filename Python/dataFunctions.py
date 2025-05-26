@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import faiss
-
+from pathlib import Path
 
 def split_into_chunks(text, max_words=100, overlap=20):
     words = text.split()
@@ -65,9 +65,10 @@ def prepare_embeddings():
     print("Loading embedding model...")
     embedder = SentenceTransformer('paraphrase-MiniLM-L3-v2')
 
-    folder_path = 'D:\\Facultate\\Python\\FML\\Project\\Funny_FML\\Data'
+    # Use relative path to the 'Data' folder
+    folder_path = Path(__file__).parent.parent / 'Data'
     print(f"Loading and embedding data from: {folder_path}")
-    passages = load_texts_from_folder(folder_path)
+    passages = load_texts_from_folder(str(folder_path))
     embeddings = embedder.encode(passages)
 
     # Build FAISS index

@@ -1,6 +1,6 @@
 from guardrail import guardrail
 from llama_cpp import Llama
-
+from pathlib import Path
 from dataFunctions import *
 
 
@@ -52,12 +52,21 @@ def continue_chat(chat_file=None):
 
 
 if __name__ == '__main__':
+    # Base path relative to this script's location
+    base_path = Path(__file__).resolve().parent
+
+    # Path to model file (relative to script)
+    model_path = base_path.parent / 'Hermes-3-Llama-3.2-3B.Q4_K_M.gguf'
+
+    prompt_path = base_path / 'Chats' / 'Prompts' / 'Constitution.txt'
+
     llm = Llama(
-        model_path = "C:\\Users\\Ana\\.lmstudio\\models\\NousResearch\\Hermes-3-Llama-3.2-3B-GGUF\\Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
-        n_ctx = 8192,
+        model_path=str(model_path),
+        n_ctx=8192,
         verbose=False
     )
-    guard=guardrail("Chats/Prompts/Constitution.txt")
+
+    guard = guardrail(str(prompt_path))
 
     continue_chat()
 
