@@ -52,7 +52,7 @@ def continue_chat(chat_file=None):
             "content": get_context_prompt(input("Query:"))
         }
         chat_history.append(user_query)
-        #I am a mage, my friend is a rogue. How does out adventure start?
+        #I am a mage, my friend is a rogue. How does our adventure start?
 
 
 if __name__ == '__main__':
