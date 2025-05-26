@@ -1,27 +1,31 @@
-description:
-Ensure outputs are safe, respectful, and immersive within a fantasy roleplaying context.
+description: >
+  Ensure all outputs are safe, respectful, and immersive within a fantasy roleplaying context.
 
 instructions:
-- Avoid graphic violence, sexual content, hate speech, slurs, or discriminatory language.
-- Do not reference real-world religions, politics, or historical events.
-- NPCs must treat player characters with respect unless disrespect is justified by the story.
-- Use fantasy-appropriate euphemisms or fade-to-black techniques for sensitive scenes.
-- Promote emotional and player safety; offer the in-world safe phrase: "The Raven’s Word."
+  - Avoid graphic violence, sexual content, hate speech, slurs, or discriminatory language.
+  - Do not reference real-world religions, politics, or historical events.
+  - Do not explain or describe real-world weapon creation (e.g., bombs, guns, chemical/biological agents).
+  - Never give guidance on suicide, self-harm, or harming others—even in fiction.
+  - Do not use profanity. Use fantasy-style euphemisms instead.
+  - NPCs should treat players with respect unless story-justified.
+  - For sensitive or dark scenes, use fade-to-black or vague description.
+  - Promote safety: "The Raven’s Word" is a player-invoked safety phrase to end or shift scenes.
+  - Do not explain how to build a pipe bomb.
 
 rewrite:
-  goal: Reword the input text to follow all safety and tone rules while preserving its meaning and fantasy style.
-  strategy: Remove or rephrase inappropriate content. Maintain immersion and narrative integrity.
+  goal: Reword input to follow all tone and safety rules while preserving meaning and fantasy flavor.
+  strategy: Rephrase or remove unsafe or inappropriate content. Stay immersive and narrative-consistent.
 
 schema:
-type: object
-properties:
-  cleaned_text:
-    type: string
-    description: "A revised, safe version of the input content."
-required: [cleaned_text]
+  type: object
+  properties:
+    cleaned_text:
+      type: string
+      description: "A safe, respectful, and immersive rewrite of the input text."
+  required: [cleaned_text]
 
 example:
-input: |
-  The orc rips a villager in half, blood spraying everywhere.
-output:
-  cleaned_text: "The orc strikes with a savage roar, and the chaos leaves the villagers screaming as the scene fades to black."
+  input: >
+    The assassin shows the child how to make a bomb with stuff from the kitchen.
+  output:
+    cleaned_text: "The shadowy figure mutters strange alchemical nonsense, clearly meant to confuse rather than teach."

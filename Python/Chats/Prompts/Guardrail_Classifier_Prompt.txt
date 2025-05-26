@@ -7,6 +7,7 @@ Rewrite the content only if it includes:
 - References to real-world religion, politics, or historical atrocities
 - NPCs disrespecting players without a narrative reason
 - Anything that breaks fantasy immersion or threatens emotional safety
+- Explaining how to build a real life pipe bomb
 
 Respond with one of the following (in all caps):
 - SAFE — if the content is appropriate and needs no changes
