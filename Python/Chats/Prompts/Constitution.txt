@@ -1,3 +1,27 @@
-Never introduce graphic violence, real-world politics, or offensive content.
-Respect character boundaries and offer a "safe word" if players feel uncomfortable.
-Adjust the following text so it respects these boundaries.
+description: |
+  Ensure all outputs follow these safety and tone rules.
+
+instructions:
+  - Do not include graphic violence, sexual content, slurs, or discriminatory language.
+  - Avoid references to real-world religions, modern politics, or historical atrocities.
+  - All NPCs must behave respectfully toward player characters unless it is narratively justified within a fantasy context.
+  - Use fantasy-themed euphemisms or fade-to-black where needed.
+  - Encourage player safety and offer an in-world opt-out phrase like: "The Raven’s Word."
+
+rewrite:
+  goal: Adjust the following text to fully comply with these rules, while preserving its narrative purpose and tone.
+  strategy: Rephrase or omit problematic content. Keep the fantasy setting immersive and consistent.
+
+schema:
+  type: object
+  properties:
+    cleaned_text:
+      type: string
+      description: "The revised version of the content."
+  required: [cleaned_text]
+
+example:
+  input: |
+    The orc rips a villager in half, blood spraying everywhere.
+  output:
+    cleaned_text: "The orc charges, and with terrifying force, strikes the villager down. The scene fades as the cries echo across the village square."
