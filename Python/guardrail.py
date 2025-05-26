@@ -12,4 +12,5 @@ class guardrail:
         if new_response!=response:
             print("Guardrail changed response.")
             print(f"Old response: {response}")
+            print(f"New response: {new_response}")
         return new_response

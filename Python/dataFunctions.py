@@ -65,7 +65,7 @@ def prepare_embeddings():
     print("Loading embedding model...")
     embedder = SentenceTransformer('paraphrase-MiniLM-L3-v2')
 
-    folder_path = 'D:\\Facultate\\Python\\FML\\Project\\Funny_FML\\Data'
+    folder_path = '../Data'
     print(f"Loading and embedding data from: {folder_path}")
     passages = load_texts_from_folder(folder_path)
     embeddings = embedder.encode(passages)
