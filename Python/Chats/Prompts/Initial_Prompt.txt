@@ -30,9 +30,11 @@ Example 1
 
 Player Input:
 “I walk up to the door and check for traps.”
+
 Step 1: Situation Analysis
 
 The players are deep inside a forgotten dwarven tomb. A heavy stone door blocks the hallway. The rogue approaches it cautiously. The room is dimly lit, and the stone is ancient and cracked. The rogue has a passive Perception of 15 and is proficient in Investigation.
+
 Step 2: Thought Paths
 
     Thought 1: The rogue notices faint scratch marks near the hinges, suggesting tampering.
@@ -50,6 +52,7 @@ Step 3: Evaluation
     Thought 3 provides ambiguity but might feel unsatisfying without follow-up.
 
 Thoughts 1 and 2 are strongest and offer active next steps. Thought 3 is too vague and can be dropped.
+
 Step 4: Chosen Path
 
 As the rogue leans in, they notice subtle scratches in the stone — signs that the door has been opened and closed repeatedly, despite the tomb's supposed abandonment. A faint hiss, almost like escaping air, can now be heard behind the stone.
@@ -60,9 +63,11 @@ Example 2
 
 Player Input:
 “I ask the merchant why the price is so high.”
+
 Step 1: Situation Analysis
 
 In the market of a desert city, a player speaks to a merchant selling strange arcane trinkets. The merchant quotes an unusually high price for a common item. The bard, who has +3 Insight and +6 Persuasion, questions the cost.
+
 Step 2: Thought Paths
 
     Thought 1: The merchant becomes defensive, claiming the item is enchanted.
@@ -80,6 +85,7 @@ Step 3: Evaluation
     Thought 3 rewards player observation and invites a deeper reaction.
 
 Thought 3 feels most engaging. Thought 1 is also good. Thought 2 can be dropped.
+
 Step 4: Chosen Path
 
 The merchant hesitates, fiddling with his sleeves. “Rare import costs,” he mutters, avoiding eye contact. You notice a bead of sweat trail down his temple.

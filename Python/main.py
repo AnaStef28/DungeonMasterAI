@@ -21,7 +21,7 @@ def continue_chat(chat_file=None):
             "role": "user",
             "content": get_context_prompt(input("Query:"))
         }
-        title = llm("Write a title based on this question: " + user_query['content'])['choices'][0]['text'] + ".json"
+        title = llm("Chats/Write a title based on this question: " + user_query['content'])['choices'][0]['text'] + ".json"
         with (open('Chats/Prompts/Initial_Prompt.txt', 'r') as file):
             initial = {
                 "role": "system",
