@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import faiss
+import pickle
 
 
 def split_into_chunks(text, max_words=100, overlap=20):
@@ -60,23 +61,33 @@ def retrieve_context(query, embedder, index, metadata, top_k=3):
     return context
 
 
-def prepare_embeddings():
-    # === Load model and data ===
-    print("Loading embedding model...")
-    embedder = SentenceTransformer('paraphrase-MiniLM-L3-v2')
+def prepare_embeddings(force_reload=False):
+    if not force_reload and os.path.exists('Embeddings/faiss_index.idx') and os.path.exists('Embeddings/metadata.pkl'):
+        print("Loading saved FAISS index and metadata...")
+        index = faiss.read_index('Embeddings/faiss_index.idx')
+        with open('Embeddings/metadata.pkl', 'rb') as f:
+            metadata = pickle.load(f)
+        embedder = SentenceTransformer('paraphrase-MiniLM-L3-v2')
+        return embedder, index, metadata
 
+    print("Embedding from scratch...")
+    embedder = SentenceTransformer('paraphrase-MiniLM-L3-v2')
     folder_path = '../Data'
-    print(f"Loading and embedding data from: {folder_path}")
     passages = load_texts_from_folder(folder_path)
     embeddings = embedder.encode(passages)
 
-    # Build FAISS index
-    print("Building FAISS index...")
     index = faiss.IndexFlatL2(embeddings.shape[1])
     index.add(np.array(embeddings))
     metadata = passages
 
+    # Save for future use
+    faiss.write_index(index, 'Embeddings/faiss_index.idx')
+    with open('Embeddings/metadata.pkl', 'wb') as f:
+        pickle.dump(metadata, f)
+
     return embedder, index, metadata
+
+
 
 
 # print("Loading LLaMA model...")
