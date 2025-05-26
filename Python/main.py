@@ -2,7 +2,7 @@ from guardrail import guardrail
 from llama_cpp import Llama
 
 from dataFunctions import *
-
+import re
 
 def get_context_prompt(question):
     '''
@@ -13,6 +13,23 @@ def get_context_prompt(question):
     context = retrieve_context(question, embedder, index, metadata)
     return build_prompt([context],question)
 
+def generate_title(prompt):
+    title_prompt = (
+        "You are an assistant that generates a short, descriptive title for a user question. "
+        "Return a concise title **in 3 to 8 words maximum**, summarizing the core topic or problem. "
+        "Avoid vague or generic phrases. Output the title as a single line with no punctuation at the end.\n\n"
+        f"User message: {prompt}\n\n"
+        "Title:"
+    )
+
+    response = llm(title_prompt)['choices'][0]['text']
+    words = response.split()
+    truncated = " ".join(words[:8])
+
+    safe_title = re.sub(r'[<>:"/\\|?*\n\r\t]', '', truncated)
+    safe_title = re.sub(r'\s+', ' ', safe_title).strip()
+
+    return safe_title+".json"
 
 def continue_chat(chat_file=None):
     '''
@@ -25,14 +42,15 @@ def continue_chat(chat_file=None):
             "role": "user",
             "content": get_context_prompt(input("Query:"))
         }
-        title = llm("Chats/Write a short title based on this question: " + user_query['content']+". Don't exceed ten words.")['choices'][0]['text'] + ".json"
+
+
         with (open('Chats/Prompts/Initial_Prompt.txt', 'r') as file):
             initial = {
                 "role": "system",
                 "content": file.read()
             }
         chat_history = [initial, user_query]
-        chat_file=title
+        chat_file="Chats/"+generate_title(user_query["content"])
     else:
         with open(chat_file, 'r') as file:
             chat_history = json.load(file)
@@ -40,12 +58,13 @@ def continue_chat(chat_file=None):
     while len(query) > 0:
         response = llm.create_chat_completion(messages = chat_history)
         new_response = guard.run_through_guardrail(response['choices'][0]['message']['content'], llm)
-        #print(new_response)
+        print(new_response)
         chat_history.append({
                 "role": "assistant",
                 "content": new_response
             })
         with open(chat_file, 'w', encoding = 'utf-8') as file:
+            print(f"Saving to {file}")
             json.dump(chat_history, file, ensure_ascii = False, indent = 2)
         user_query = {
             "role": "user",
@@ -61,15 +80,15 @@ if __name__ == '__main__':
         n_ctx = 8192,
         verbose=False
     )
-    guard=guardrail("Chats/Prompts/Constitution.txt")
+    guard=guardrail()
     option="1"
     while len(option) > 0:
         try:
-            option=input("Option:")
-            if option == "1":
+            option=input("1 - Start new chat.\n2 - Continue chat.\nOption:")
+            if int(option) == 1:
                 #start new chat
                 continue_chat()
-            elif option == "2":
+            elif int(option) == 2:
                 #continue existing chat
                 file_name=input("File Name:")
                 continue_chat("Chats/"+file_name)

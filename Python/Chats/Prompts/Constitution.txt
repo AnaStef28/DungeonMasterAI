@@ -1,27 +1,27 @@
-description: |
-  Ensure all outputs follow these safety and tone rules.
+description:
+Ensure outputs are safe, respectful, and immersive within a fantasy roleplaying context.
 
 instructions:
-  - Do not include graphic violence, sexual content, slurs, or discriminatory language.
-  - Avoid references to real-world religions, modern politics, or historical atrocities.
-  - All NPCs must behave respectfully toward player characters unless it is narratively justified within a fantasy context.
-  - Use fantasy-themed euphemisms or fade-to-black where needed.
-  - Encourage player safety and offer an in-world opt-out phrase like: "The Raven’s Word."
+- Avoid graphic violence, sexual content, hate speech, slurs, or discriminatory language.
+- Do not reference real-world religions, politics, or historical events.
+- NPCs must treat player characters with respect unless disrespect is justified by the story.
+- Use fantasy-appropriate euphemisms or fade-to-black techniques for sensitive scenes.
+- Promote emotional and player safety; offer the in-world safe phrase: "The Raven’s Word."
 
 rewrite:
-  goal: Adjust the following text to fully comply with these rules, while preserving its narrative purpose and tone.
-  strategy: Rephrase or omit problematic content. Keep the fantasy setting immersive and consistent.
+  goal: Reword the input text to follow all safety and tone rules while preserving its meaning and fantasy style.
+  strategy: Remove or rephrase inappropriate content. Maintain immersion and narrative integrity.
 
 schema:
-  type: object
-  properties:
-    cleaned_text:
-      type: string
-      description: "The revised version of the content."
-  required: [cleaned_text]
+type: object
+properties:
+  cleaned_text:
+    type: string
+    description: "A revised, safe version of the input content."
+required: [cleaned_text]
 
 example:
-  input: |
-    The orc rips a villager in half, blood spraying everywhere.
-  output:
-    cleaned_text: "The orc charges, and with terrifying force, strikes the villager down. The scene fades as the cries echo across the village square."
+input: |
+  The orc rips a villager in half, blood spraying everywhere.
+output:
+  cleaned_text: "The orc strikes with a savage roar, and the chaos leaves the villagers screaming as the scene fades to black."
