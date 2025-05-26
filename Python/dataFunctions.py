@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import faiss
-from llama_cpp import Llama
 
 
 def split_into_chunks(text, max_words=100, overlap=20):
@@ -51,7 +50,6 @@ def load_texts_from_folder(folder_path):
 def build_prompt(context, question):
     context_text = "\n".join(context)
     return f"Context:\n{context_text}\n\nQuestion: {question}\nAnswer:"
-
 
 def retrieve_context(query, embedder, index, metadata, top_k=3):
     query_vec = embedder.encode([query], convert_to_tensor=False)
