@@ -55,7 +55,7 @@ def continue_chat(chat_file=None):
         chat_history = [initial, user_query]
         chat_file="Chats/"+generate_title(user_query["content"])
     else:
-        with open(chat_file, 'r') as file:
+        with open(chat_file, 'r', encoding='utf-8') as file:
             chat_history = json.load(file)
     query="b"
     while len(query) > 0:
