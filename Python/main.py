@@ -60,7 +60,7 @@ def continue_chat(chat_file=None):
     query="b"
     while len(query) > 0:
         response = llm.create_chat_completion(messages = chat_history)
-        new_response = guard.run_through_guardrail(response['choices'][0]['message']['content'], llm)
+        new_response = guard.run_through_guardrail(response['choices'][0]['message']['content'])
         print(new_response)
         chat_history.append({
                 "role": "assistant",
@@ -82,7 +82,7 @@ if __name__ == '__main__':
         n_ctx = 8192,
         verbose=False
     )
-    guard=guardrail()
+    guard=guardrail(llm)
     option="1"
     while len(option) > 0:
         try:

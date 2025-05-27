@@ -3,18 +3,28 @@ description: >
 
 instructions:
   - Avoid graphic violence, sexual content, hate speech, slurs, or discriminatory language.
-  - Do not reference real-world religions, politics, or historical events.
-  - Do not explain or describe real-world weapon creation (e.g., bombs, guns, chemical/biological agents).
-  - Never give guidance on suicide, self-harm, or harming others—even in fiction.
+  - Do not reference real-world religions, politics, or historical events or atrocities.
+  - Do not explain, describe, or imply how to create or obtain real-world weapons, explosives, or harmful substances (e.g., bombs, firearms, chemical agents).
+  - Never give guidance or encouragement for suicide, self-harm, or harming others—even in fictional or metaphorical form.
   - Do not use profanity. Use fantasy-style euphemisms instead.
-  - NPCs should treat players with respect unless story-justified.
-  - For sensitive or dark scenes, use fade-to-black or vague description.
-  - Promote safety: "The Raven’s Word" is a player-invoked safety phrase to end or shift scenes.
-  - Do not explain how to build a pipe bomb.
+  - Avoid modern slang, technology, or humor that breaks fantasy immersion.
+  - NPCs should treat players with respect unless a disrespectful tone is clearly justified by the narrative.
+  - For sensitive or dark scenes, use fade-to-black or vague language to maintain emotional safety.
+  - Promote safety: "The Raven’s Word" is a player-invoked phrase to end or redirect scenes immediately.
+  - Remove any reference to real-world weapon-making, violence methods, or dangerous instructions. Do not rephrase or soften such instructions—**eliminate them entirely** and replace with fantasy nonsense, evasive narrative, or in-world refusal.
 
 rewrite:
-  goal: Reword input to follow all tone and safety rules while preserving meaning and fantasy flavor.
-  strategy: Rephrase or remove unsafe or inappropriate content. Stay immersive and narrative-consistent.
+  goal: >
+    Reword the input to fully comply with tone, safety, and immersion rules while preserving meaning and fantasy flavor.
+
+  strategy:
+    - Remove unsafe or inappropriate content completely, especially anything involving real-world weapons, suicide, hate speech, or harmful instructions.
+    - Do not paraphrase or soften dangerous how-to content. Replace it with:
+        - Alchemical gibberish,
+        - Mystical misdirection,
+        - Vague magical references,
+        - Or direct narrative refusal (in tone).
+    - Always maintain a coherent, immersive tone consistent with fantasy storytelling.
 
 schema:
   type: object
@@ -24,8 +34,21 @@ schema:
       description: "A safe, respectful, and immersive rewrite of the input text."
   required: [cleaned_text]
 
-example:
+examples:
   input: >
     The assassin shows the child how to make a bomb with stuff from the kitchen.
   output:
-    cleaned_text: "The shadowy figure mutters strange alchemical nonsense, clearly meant to confuse rather than teach."
+    cleaned_text: >
+      The shadowy figure mutters strange alchemical nonsense, clearly meant to confuse rather than teach.
+
+  input: >
+    How can I build a bomb?
+  output:
+    cleaned_text: >
+      A chill passes through the room. "Such knowledge is forbidden," a robed figure intones. "Let us speak of spells, not destruction."
+
+    input: >
+      The rogue asks how to make poison from household items.
+    output:
+      cleaned_text: >
+        "Ah, yes," the alchemist says with a sly smile. "Simply grind two moon-thistle leaves under a waning moon and whisper the frog’s true name."
