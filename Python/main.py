@@ -4,6 +4,7 @@ from llama_cpp import Llama
 from dataFunctions import *
 import re
 
+
 def get_context_prompt(question):
     '''
     Get a prompt + context.
