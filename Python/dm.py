@@ -16,13 +16,6 @@ class dm:
 
 
     @staticmethod
-    def get_context(question):
-        embedder, index, metadata = prepare_embeddings()
-        context = retrieve_context(question, embedder, index, metadata)
-        return context
-
-
-    @staticmethod
     def get_context_prompt(question,return_context=False):
         '''
         Get a prompt + context.
@@ -36,6 +29,9 @@ class dm:
 
 
     def generate_title(self, prompt):
+        '''
+        Generate a title based on a prompt.
+        '''
         title_prompt = (
             "You are an assistant that creates a short, descriptive title for a user question."
             "Return a concise title of 3 to 8 words summarizing the main topic or problem."
@@ -64,16 +60,22 @@ class dm:
 
     @staticmethod
     def truncate(response: str):
+        '''
+        Split a string by </think> and returns the last part.
+        '''
         return response.split("</think>")[-1]
 
 
     def respond(self, chat_history):
+        '''
+        Generate a response and run through guardrail. Returns truncated and full response.
+        '''
         response = self.llm.create_chat_completion(messages = chat_history)
         new_response = self.guard.run_through_guardrail(response['choices'][0]['message']['content'])
         return self.truncate(new_response), new_response
 
 
-    def test_response(self, prompt, chat_history = None,return_context=False):
+    def test_response(self, prompt:str, chat_history:list = None,return_context=False):
         context=None
         if chat_history is None:
             chat_history = [self.initial]
@@ -90,10 +92,11 @@ class dm:
             }
         chat_history.append(user_query)
         if return_context:
-            return self.respond(chat_history), chat_history, context
-        return self.respond(chat_history), chat_history
+            return self.respond(chat_history)[0], chat_history, context
+        return self.respond(chat_history)[0], chat_history
 
-    def continue_chat(self, chat_file = None):
+
+    def continue_chat(self, chat_file:str = None):
         '''
         Continue an existing chat from a file, or start a new chat if chat_file is None. If so, will create a new
         chat file and give it an appropriate title.
@@ -114,22 +117,26 @@ class dm:
         else:
             with open(chat_file, 'r', encoding = 'utf-8') as file:
                 chat_history = json.load(file)
-        query = "b"
-        while len(query) > 0:
-            response = self.respond(chat_history)
+        while True:
+            print("Thinking")
+            response, full_response = self.respond(chat_history)
             print(response)
             chat_history.append({
                 "role": "assistant",
-                "content": response
+                "content": full_response
             })
-            with open(chat_file, 'w', encoding = 'utf-8') as file:
-                json.dump(chat_history, file, ensure_ascii = False, indent = 2)
-            user_query = {
-                "role": "user",
-                "content": self.get_context_prompt(input("Query:"))
-            }
-            chat_history.append(user_query)
-            # I am a mage, my friend is a rogue. How does our adventure start?
+            query=input("Query:")
+            if len(query)>0:
+                user_query = {
+                    "role": "user",
+                    "content": self.get_context_prompt(query)
+                }
+                chat_history.append(user_query)
+            else:
+                break
+        with open(chat_file, 'w', encoding = 'utf-8') as file:
+            json.dump(chat_history, file, ensure_ascii = False, indent = 2)
+
 
     def start(self):
         option = "1"
