@@ -14,17 +14,22 @@ def get_context_prompt(question):
     context = retrieve_context(question, embedder, index, metadata)
     return build_prompt([context],question)
 
+
 def generate_title(prompt):
     title_prompt = (
-        "You are an assistant that generates a short, descriptive title for a user question. "
-        "Return a concise title **in 3 to 8 words maximum**, summarizing the core topic or problem. "
-        "Avoid vague or generic phrases. Output the title as a single line with no punctuation at the end."
-        "\n---\nUser message: I am a knight. I enter a village. What do I see?\n"
+        "You are an assistant that creates a short, descriptive title for a user question."
+        "Return a concise title of 3 to 8 words summarizing the main topic or problem."
+        "Avoid vague or generic phrases."
+        "Output the title as a single line without punctuation at the end."
+        "---"
+        "User message: I am a knight. I enter a village. What do I see?"
         "Title: Knight arrives at village"
-        "\n---\n"
+        "---"
         "User message: How do I fix a broken sword?"
         "Title: Repairing a broken sword"
-        f"\n{prompt}"
+        "---"
+        f"User message: {prompt}"
+        "Title:"
     )
 
     response = llm(title_prompt)['choices'][0]['text']
@@ -35,6 +40,11 @@ def generate_title(prompt):
     safe_title = re.sub(r'\s+', ' ', safe_title).strip()
 
     return safe_title+".json"
+
+
+def truncate(response:str):
+    return response.split("</think>")[-1]
+
 
 def continue_chat(chat_file=None):
     '''
@@ -61,7 +71,7 @@ def continue_chat(chat_file=None):
     while len(query) > 0:
         response = llm.create_chat_completion(messages = chat_history)
         new_response = guard.run_through_guardrail(response['choices'][0]['message']['content'])
-        print(new_response)
+        print(truncate(new_response))
         chat_history.append({
                 "role": "assistant",
                 "content": new_response
@@ -78,7 +88,7 @@ def continue_chat(chat_file=None):
 
 if __name__ == '__main__':
     llm = Llama(
-        model_path = "../Hermes-3-Llama-3.2-3B.Q4_K_M.gguf",
+        model_path = "../Qwen3-8B-Q3_K_L.gguf",
         n_ctx = 8192,
         verbose=False
     )

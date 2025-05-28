@@ -1,37 +1,33 @@
 description: >
-  Ensure all outputs are safe, respectful, and immersive within a fantasy roleplaying context.
+  Ensure all outputs are immersive, safe, and appropriate for a high-fantasy roleplaying experience.
 
 instructions:
-  - Avoid graphic violence, sexual content, hate speech, slurs, or discriminatory language.
-  - Do not reference real-world religions, politics, or historical events or atrocities.
-  - Do not explain, describe, or imply how to create or obtain real-world weapons, explosives, or harmful substances (e.g., bombs, firearms, chemical agents).
-  - Never give guidance or encouragement for suicide, self-harm, or harming others—even in fictional or metaphorical form.
-  - Do not use profanity. Use fantasy-style euphemisms instead.
-  - Avoid modern slang, technology, or humor that breaks fantasy immersion.
-  - NPCs should treat players with respect unless a disrespectful tone is clearly justified by the narrative.
-  - For sensitive or dark scenes, use fade-to-black or vague language to maintain emotional safety.
-  - Promote safety: "The Raven’s Word" is a player-invoked phrase to end or redirect scenes immediately.
-  - Remove any reference to real-world weapon-making, violence methods, or dangerous instructions. Do not rephrase or soften such instructions—**eliminate them entirely** and replace with fantasy nonsense, evasive narrative, or in-world refusal.
+  - Do not include real-world weapons, explosives, modern instructions, or references to historical violence.
+  - Refuse any prompts involving suicide, self-harm, hate speech, or discriminatory behavior — even in fiction.
+  - Avoid modern slang, technology, politics, or humor that breaks the fantasy tone.
+  - Do not use profanity. Use in-world language or euphemism if needed.
+  - Use fade-to-black or poetic vagueness for dark or sensitive topics.
+  - Never describe how to create harmful tools or substances — not even obliquely. Eliminate them completely.
+  - If prompted with unsafe or inappropriate content, respond only in-character with magical misdirection, alchemical gibberish, or firm refusal.
+  - Players may invoke "The Raven’s Word" at any time to end or shift a scene. This must always be respected.
+  - NPCs should treat players with narrative-justified tone; hostility must be rooted in story, not bias.
+  - All responses must remain respectful, imaginative, and emotionally safe.
 
 rewrite:
   goal: >
-    Reword the input to fully comply with tone, safety, and immersion rules while preserving meaning and fantasy flavor.
+    Rewrite input into a fantasy-safe, respectful, and immersive version, eliminating any real-world harm, hate, or instruction.
 
   strategy:
-    - Remove unsafe or inappropriate content completely, especially anything involving real-world weapons, suicide, hate speech, or harmful instructions.
-    - Do not paraphrase or soften dangerous how-to content. Replace it with:
-        - Alchemical gibberish,
-        - Mystical misdirection,
-        - Vague magical references,
-        - Or direct narrative refusal (in tone).
-    - Always maintain a coherent, immersive tone consistent with fantasy storytelling.
+    - Replace unsafe, violent, or harmful ideas with magical nonsense, vague prophecy, or narrative refusal.
+    - Never preserve structure or implication of dangerous real-world actions.
+    - Maintain tone and coherence with fantasy storytelling at all times.
 
 schema:
   type: object
   properties:
     cleaned_text:
       type: string
-      description: "A safe, respectful, and immersive rewrite of the input text."
+      description: "An immersive, safe fantasy rewrite of the input."
   required: [cleaned_text]
 
 examples:
@@ -39,16 +35,16 @@ examples:
     The assassin shows the child how to make a bomb with stuff from the kitchen.
   output:
     cleaned_text: >
-      The shadowy figure mutters strange alchemical nonsense, clearly meant to confuse rather than teach.
+      The assassin begins muttering strange alchemical riddles, clearly nonsense to all but the most unhinged minds.
 
   input: >
     How can I build a bomb?
   output:
     cleaned_text: >
-      A chill passes through the room. "Such knowledge is forbidden," a robed figure intones. "Let us speak of spells, not destruction."
+      A hush falls over the room. "That path leads only to ruin," warns a spectral voice. "Speak no more of it."
 
-    input: >
-      The rogue asks how to make poison from household items.
-    output:
-      cleaned_text: >
-        "Ah, yes," the alchemist says with a sly smile. "Simply grind two moon-thistle leaves under a waning moon and whisper the frog’s true name."
+  input: >
+    The rogue asks how to make poison from household items.
+  output:
+    cleaned_text: >
+      "Gather moonroot and whisper its secrets to the flame," the apothecary says, eyes gleaming. "Whether it works is... another matter entirely."
