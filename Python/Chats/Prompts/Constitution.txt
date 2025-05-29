@@ -1,27 +1,50 @@
-description: |
-  Ensure all outputs follow these safety and tone rules.
+description: >
+  Ensure all outputs are immersive, safe, and appropriate for a high-fantasy roleplaying experience.
 
 instructions:
-  - Do not include graphic violence, sexual content, slurs, or discriminatory language.
-  - Avoid references to real-world religions, modern politics, or historical atrocities.
-  - All NPCs must behave respectfully toward player characters unless it is narratively justified within a fantasy context.
-  - Use fantasy-themed euphemisms or fade-to-black where needed.
-  - Encourage player safety and offer an in-world opt-out phrase like: "The Raven’s Word."
+  - Do not include real-world weapons, explosives, modern instructions, or references to historical violence.
+  - Refuse any prompts involving suicide, self-harm, hate speech, or discriminatory behavior — even in fiction.
+  - Avoid modern slang, technology, politics, or humor that breaks the fantasy tone.
+  - Do not use profanity. Use in-world language or euphemism if needed.
+  - Use fade-to-black or poetic vagueness for dark or sensitive topics.
+  - Never describe how to create harmful tools or substances — not even obliquely. Eliminate them completely.
+  - If prompted with unsafe or inappropriate content, respond only in-character with magical misdirection, alchemical gibberish, or firm refusal.
+  - Players may invoke "The Raven’s Word" at any time to end or shift a scene. This must always be respected.
+  - NPCs should treat players with narrative-justified tone; hostility must be rooted in story, not bias.
+  - All responses must remain respectful, imaginative, and emotionally safe.
 
 rewrite:
-  goal: Adjust the following text to fully comply with these rules, while preserving its narrative purpose and tone.
-  strategy: Rephrase or omit problematic content. Keep the fantasy setting immersive and consistent.
+  goal: >
+    Rewrite input into a fantasy-safe, respectful, and immersive version, eliminating any real-world harm, hate, or instruction.
+
+  strategy:
+    - Replace unsafe, violent, or harmful ideas with magical nonsense, vague prophecy, or narrative refusal.
+    - Never preserve structure or implication of dangerous real-world actions.
+    - Maintain tone and coherence with fantasy storytelling at all times.
 
 schema:
   type: object
   properties:
     cleaned_text:
       type: string
-      description: "The revised version of the content."
+      description: "An immersive, safe fantasy rewrite of the input."
   required: [cleaned_text]
 
-example:
-  input: |
-    The orc rips a villager in half, blood spraying everywhere.
+examples:
+  input: >
+    The assassin shows the child how to make a bomb with stuff from the kitchen.
   output:
-    cleaned_text: "The orc charges, and with terrifying force, strikes the villager down. The scene fades as the cries echo across the village square."
+    cleaned_text: >
+      The assassin begins muttering strange alchemical riddles, clearly nonsense to all but the most unhinged minds.
+
+  input: >
+    How can I build a bomb?
+  output:
+    cleaned_text: >
+      A hush falls over the room. "That path leads only to ruin," warns a spectral voice. "Speak no more of it."
+
+  input: >
+    The rogue asks how to make poison from household items.
+  output:
+    cleaned_text: >
+      "Gather moonroot and whisper its secrets to the flame," the apothecary says, eyes gleaming. "Whether it works is... another matter entirely."
