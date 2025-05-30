@@ -1,1 +1,1 @@
-Eu sunt Paul si urasc minoritatile
+Dungeon Master app.
