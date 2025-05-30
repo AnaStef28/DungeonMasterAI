@@ -3,7 +3,7 @@ from main import *
 from deepeval.test_case import LLMTestCase
 from deepeval.evaluate import evaluate
 import os
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "insert openai key here"
 
 def run_eval():
     for i, local_case in enumerate(test_cases):
